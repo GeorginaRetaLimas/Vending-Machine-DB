@@ -8,7 +8,7 @@ para Programación ESP32, Arquitectura y QA.
 |---|---|
 | **Versión de esquema** | 1 |
 | **Motor** | SQLite |
-| **Script correspondiente** | [`../../dictionary/schema.sql`](../../dictionary/schema.sql) — validado contra un motor SQLite real antes de esta entrega |
+| **Script correspondiente** | [`../../database/schema.sql`](../../database/schema.sql) — validado contra un motor SQLite real antes de esta entrega |
 
 ## Archivos de esta carpeta
 

@@ -7,7 +7,7 @@
   <img alt="C++" src="https://img.shields.io/badge/C%2B%2B-Funciones%20de%20acceso-00599C?logo=cplusplus&logoColor=white">
 </p>
 
-<h3 align="center">ITIID 7-1 · Septiembre - Diciembre 2026</h3>
+<h3 align="center">ITIID 7-1 · Septiembre 2026</h3>
 <p align="center"><i>Docente: Dr. Said Polanco Martagón</i></p>
 
 ---
@@ -15,10 +15,7 @@
 ## Resumen
 
 Este repositorio contiene el **módulo de persistencia** (esquema, restricciones, consultas, transacciones,
-migración, respaldo y funciones de acceso) que ejecutará el ESP32 de la máquina expendedora SAID. El
-subgrupo **no** construye una base maestra en computadora ni administra la cola FreeRTOS o el servidor
-web — esas partes pertenecen a **Programación ESP32** — pero entrega el código y los ejemplos que ese
-equipo necesita para integrarlo.
+migración, respaldo y funciones de acceso) que ejecutará el ESP32 de la máquina expendedora SAID.
 
 ## Funciones principales del módulo
 
