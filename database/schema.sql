@@ -111,6 +111,40 @@ CREATE TABLE movimientos_saldo (
     request_id           TEXT    NOT NULL UNIQUE
 );
 
+-- denominaciones : Catálogo de valores de efectivo (monedas y billetes) aceptados
+CREATE TABLE denominaciones (
+    id_denominacion   INTEGER PRIMARY KEY AUTOINCREMENT,
+    valor_centavos    INTEGER NOT NULL CHECK (valor_centavos > 0),
+    tipo              TEXT    NOT NULL CHECK (tipo IN ('moneda', 'billete')),
+    activa            INTEGER NOT NULL DEFAULT 1 CHECK (activa IN (0, 1)),
+    UNIQUE (valor_centavos, tipo)
+);
+
+-- caja_efectivo : Cantidad actual disponible de cada denominación dentro de la
+-- máquina, usada para decidir si hay suficiente para dar cambio. Es la fuente
+-- de verdad (igual que slots.stock); movimientos_efectivo es solo bitácora.
+CREATE TABLE caja_efectivo (
+    id_denominacion  INTEGER PRIMARY KEY REFERENCES denominaciones (id_denominacion),
+    cantidad         INTEGER NOT NULL DEFAULT 0 CHECK (cantidad >= 0),
+    version          INTEGER NOT NULL DEFAULT 0
+);
+
+-- movimientos_efectivo : Bitácora de auditoría de cada cambio en caja_efectivo:
+-- piezas recibidas como pago, piezas entregadas como cambio (ambas ligadas a la
+-- transacción que las originó) o ajustes manuales del administrador desde la web.
+-- Cubre a la vez el detalle de composición del pago y la auditoría de cantidad,
+-- para no duplicar el mismo hecho en dos tablas distintas.
+CREATE TABLE movimientos_efectivo (
+    id_movimiento_efectivo  INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_denominacion         INTEGER NOT NULL REFERENCES denominaciones (id_denominacion),
+    id_transaccion          INTEGER REFERENCES transacciones (id_transaccion),
+    delta                   INTEGER NOT NULL,
+    motivo                  TEXT    NOT NULL CHECK (motivo IN ('PAGO_RECIBIDO', 'CAMBIO_ENTREGADO', 'AJUSTE')),
+    operador                INTEGER REFERENCES administradores (id_admin),
+    request_id              TEXT UNIQUE,
+    secuencia               INTEGER
+);
+
 -- ---------------------------------------------------------------------
 -- eventos
 -- Bitácora general de diagnóstico (errores, advertencias), separada
@@ -148,9 +182,23 @@ CREATE INDEX idx_transacciones_tarjeta  ON transacciones (id_tarjeta);
 CREATE INDEX idx_reposiciones_slot      ON reposiciones (id_slot);
 CREATE INDEX idx_mov_stock_slot         ON movimientos_stock (id_slot);
 CREATE INDEX idx_mov_saldo_tarjeta      ON movimientos_saldo (id_tarjeta);
+CREATE INDEX idx_mov_efectivo_denominacion ON movimientos_efectivo (id_denominacion);
+CREATE INDEX idx_mov_efectivo_transaccion  ON movimientos_efectivo (id_transaccion);
 
---------------------------------------------------------------------
--- Fila inicial de configuración (para que exista desde el arranque)
 -- ---------------------------------------------------------------------
-INSERT INTO configuraciones (id_configuracion, version_esquema, secuencia_global, modalidad_reposicion, estado_inicializacion)
-VALUES (1, 1, 0, 'teclado', 'PENDIENTE');
+-- Catálogo fijo de denominaciones de pesos mexicanos, usado en el pago
+-- simulado por teclado (no hay aceptador físico de efectivo). El valor $20
+-- existe como moneda y como billete a la vez, por eso ambas filas conviven.
+-- ---------------------------------------------------------------------
+INSERT INTO denominaciones (valor_centavos, tipo) VALUES
+    (100,    'moneda'),   -- $1
+    (200,    'moneda'),   -- $2
+    (500,    'moneda'),   -- $5
+    (1000,   'moneda'),   -- $10
+    (2000,   'moneda'),   -- $20 (moneda)
+    (2000,   'billete'),  -- $20 (billete)
+    (5000,   'billete'),  -- $50
+    (10000,  'billete'),  -- $100
+    (20000,  'billete'),  -- $200
+    (50000,  'billete'),  -- $500
+    (100000, 'billete');  -- $1000

@@ -1,11 +1,10 @@
 # Base de Datos e Interfaz — Máquina Expendedora SAID
 
-<p align="center">
-  <img alt="SQLite" src="https://img.shields.io/badge/SQLite-3-003B57?logo=sqlite&logoColor=white">
-  <img alt="SQL" src="https://img.shields.io/badge/SQL-DDL%2FDML-4479A1?logo=postgresql&logoColor=white">
-  <img alt="ESP32" src="https://img.shields.io/badge/ESP32-Integraci%C3%B3n-3E8E41?logo=espressif&logoColor=white">
-  <img alt="C++" src="https://img.shields.io/badge/C%2B%2B-Funciones%20de%20acceso-00599C?logo=cplusplus&logoColor=white">
-</p>
+[![SQLite](https://img.shields.io/badge/SQLite-8faa8b?style=for-the-badge&logo=sqlite&logoColor=white)](#)
+[![SQL](https://img.shields.io/badge/SQL-DDL%2FDML-4479A1?logo=postgresql&logoColor=white)](#)
+[![ESP32](https://img.shields.io/badge/ESP32-Integraci%C3%B3n-3E8E41?logo=espressif&logoColor=white)](#)
+[![C++](https://img.shields.io/badge/C%2B%2B-Funciones%20de%20acceso-00599C?logo=cplusplus&logoColor=white)](#)
+[![SQLite](https://img.shields.io/badge/SQLite-8faa8b?style=for-the-badge&logo=sqlite&logoColor=white)](#)
 
 <h3 align="center">ITIID 7-1 · Septiembre 2026</h3>
 <p align="center"><i>Docente: Dr. Said Polanco Martagón</i></p>
