@@ -38,6 +38,24 @@ INSERT INTO tarjetas_demo (id_tarjeta, uid, saldo_centavos, reserva_centavos, ha
     (1, 'RFID-0001', 5000, 0, 1),  -- Tarjeta activa con $50.00 de saldo
     (2, 'RFID-0002',    0, 0, 0);  -- Tarjeta deshabilitada
 
+-- caja_efectivo: cantidad inicial de piezas disponibles para dar cambio.
+-- Más piezas de baja denominación, ya que son las que más se usan al dar cambio.
+INSERT INTO caja_efectivo (id_denominacion, cantidad, version)
+SELECT id_denominacion, 30, 0 FROM denominaciones
+    WHERE tipo = 'moneda';                                   -- $1, $2, $5, $10, $20 (moneda): 30 piezas c/u
+
+INSERT INTO caja_efectivo (id_denominacion, cantidad, version)
+SELECT id_denominacion, 15, 0 FROM denominaciones
+    WHERE valor_centavos = 2000 AND tipo = 'billete';         -- $20 (billete): 15 piezas
+
+INSERT INTO caja_efectivo (id_denominacion, cantidad, version)
+SELECT id_denominacion, 10, 0 FROM denominaciones
+    WHERE valor_centavos IN (5000, 10000) AND tipo = 'billete'; -- $50, $100: 10 piezas c/u
+
+INSERT INTO caja_efectivo (id_denominacion, cantidad, version)
+SELECT id_denominacion, 5, 0 FROM denominaciones
+    WHERE valor_centavos IN (20000, 50000, 100000) AND tipo = 'billete'; -- $200, $500, $1000: 5 piezas c/u
+
 -- configuracion: la fila id=1 ya existe (se crea en schema.sql).
 -- Aquí solo se actualiza para reflejar que los datos semilla ya se
 -- cargaron, dato que el ESP32 puede consultar al arrancar.
