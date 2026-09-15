@@ -5,12 +5,28 @@ Esta carpeta guarda el **historial de cambios de esquema** de la base SQLite, pa
 
 ## Cómo funciona el versionado
 
-- La versión actual del esquema vive en `PRAGMA user_version` (forma nativa de SQLite) y también se
-  refleja en la tabla `configuracion`.
+- La versión actual del esquema se refleja en la tabla `configuracion`.
 - En el arranque, el ESP32 compara la versión guardada contra la versión esperada por el firmware. Si son
   distintas, se aplica la migración correspondiente antes de operar con normalidad.
 - El procedimiento es intencionalmente simple: **no** se sobrescribe ni se recrea la base; cada migración
   solo agrega los `ALTER TABLE` / ajustes necesarios para llegar de una versión a la siguiente.
+
+  Cada migración debe tener dentro de sí la siguiente estructura:
+
+  ```sql
+  BEGIN TRY
+      BEGIN TRANSACTION;
+
+      ALTER TABLE usuarios ADD num_telf VARCHAR(15); -- Función de la migración
+
+      UPDATE configuraciones SET version_esquema = 2; -- Número de versión correspondiente
+
+      COMMIT TRANSACTION;
+  END TRY
+  BEGIN CATCH
+      ROLLBACK TRANSACTION; -- Rollback en caso de error
+  END CATCH;
+  ```  
 
 ## Convención de nombres
 
